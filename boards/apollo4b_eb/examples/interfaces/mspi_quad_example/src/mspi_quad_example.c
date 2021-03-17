@@ -385,12 +385,22 @@ main(void)
     ui32Status = device_func.flash_init(MSPI_TEST_MODULE, (void*)&MSPI_Flash_Config, &g_FlashHdl, &g_MSPIHdl);
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
-        am_util_stdio_printf("Failed to configure the MSPI and Flash Device correctly!\n");
+        am_util_stdio_printf("Failed(%d) to configure the MSPI and Flash Device correctly!\n",ui32Status);
+		goto err;
     }
     NVIC_SetPriority(mspi_interrupts[MSPI_TEST_MODULE], AM_IRQ_PRIORITY_DEFAULT);
     NVIC_EnableIRQ(mspi_interrupts[MSPI_TEST_MODULE]);
 
     am_hal_interrupt_master_enable();
+
+	ui32Status = device_func.flash_read_id(g_FlashHdl);
+	if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
+    {
+        am_util_stdio_printf("Failed to read flash id(0x%08X)!\n",ui32Status);
+		//goto err;
+    }
+	else
+		am_util_stdio_printf("Read flash id correctly\n");
 
     //
     // Generate data into the Sector Buffer
@@ -408,6 +418,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to erase Flash Device sector!\n");
+		goto err;
     }
 
     //
@@ -417,6 +428,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to enable XIP mode in the MSPI!\n");
+		goto err;
     }
 
     //
@@ -428,7 +440,7 @@ main(void)
         if ( *pui32Address != 0xFFFFFFFF )
         {
             am_util_stdio_printf("Failed to erase Flash Device sector!\n");
-            return -1;
+            goto err;;
         }
     }
 
@@ -439,6 +451,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to disable XIP mode in the MSPI!\n");
+		goto err;
     }
 
     //
@@ -449,6 +462,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to write buffer to Flash Device!\n");
+		goto err;
     }
 
     //
@@ -459,6 +473,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to read buffer to Flash Device!\n");
+		goto err;
     }
 
     //
@@ -467,11 +482,21 @@ main(void)
     am_util_stdio_printf("Comparing the TX and RX Buffers\n");
     for (uint32_t i = 0; i < MSPI_BUFFER_SIZE; i++)
     {
-        if (g_SectorRXBuffer[i] != g_SectorTXBuffer[i])
+		if (g_SectorRXBuffer[i] != g_SectorTXBuffer[i])
         {
-            am_util_stdio_printf("TX and RX buffers failed to compare!\n");
-            break;
+            //am_util_stdio_printf("TX and RX buffers failed to compare!\n");
+            //goto err;
+            if(i%32==0)
+				am_util_stdio_printf("\n");
+            am_util_stdio_printf("0x%08X:0x%02X ",i,g_SectorRXBuffer[i]);
+			ui32Status = AM_DEVICES_MSPI_ATXP032_STATUS_ERROR;
         }
+    }
+
+	if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
+    {
+        am_util_stdio_printf("\n\nTX and RX buffers failed to compare!\n");
+		goto err;
     }
 
     //
@@ -482,6 +507,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to erase Flash Device sector!\n");
+		goto err;
     }
 
     //
@@ -492,6 +518,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to enable MSPI scrambling!\n");
+		goto err;
     }
 
     //
@@ -502,6 +529,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to write executable function to Flash Device!\n");
+		goto err;
     }
 
     //
@@ -512,12 +540,14 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to put the MSPI into XIP mode!\n");
+		goto err;
     }
 
     ui32Status = am_devices_mspi_atxp032_enable_scrambling(g_FlashHdl);
     if (AM_DEVICES_MSPI_ATXP032_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to enable MSPI scrambling!\n");
+		goto err;
     }
 
     //
@@ -535,6 +565,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to disable XIP mode in the MSPI!\n");
+		goto err;
     }
 
     am_hal_interrupt_master_disable();
@@ -547,6 +578,7 @@ main(void)
     if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
         am_util_stdio_printf("Failed to shutdown the MSPI and Flash Device!\n");
+		goto err;
     }
 
     //
@@ -554,6 +586,7 @@ main(void)
     //
     am_util_stdio_printf("Apollo4 MSPI Example Complete\n");
 
+err:
     //
     // Loop forever while sleeping.
     //

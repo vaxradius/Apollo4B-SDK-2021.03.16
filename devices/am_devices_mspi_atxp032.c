@@ -1035,7 +1035,7 @@ am_devices_mspi_atxp032_id(void *pHandle)
     }
     else
     {
-        return AM_DEVICES_MSPI_ATXP032_STATUS_ERROR;
+        return (ui32DeviceID & AM_DEVICES_MSPI_ATXP032_ID_MASK);
     }
 }
 
