@@ -77,7 +77,7 @@
 
 #define DEFAULT_TIMEOUT         10000
 
-#define MSPI_TEST_MODULE        2
+#define MSPI_TEST_MODULE        0
 
 #if (AM_PART_APOLLO3)
 #define MSPI_XIP_BASE_ADDRESS 0x04000000
@@ -87,7 +87,12 @@
 #define MSPI_XIP_BASE_ADDRESS 0x04000000
 #endif
 
+#if(MSPI_TEST_MODULE==0)
+#define MSPI_XIP_BASE_ADDRESS 0x14000000
+#else
 #define MSPI_XIP_BASE_ADDRESS 0x1C000000
+#endif
+
 //#define START_SPEED_INDEX       0
 //#define END_SPEED_INDEX         11
 
@@ -99,7 +104,7 @@ uint8_t         DummyBuffer[1024];
 uint8_t         g_SectorTXBuffer[MSPI_BUFFER_SIZE];
 uint8_t         g_SectorRXBuffer[MSPI_BUFFER_SIZE];
 
-#define MSPI_TEST_FREQ          AM_HAL_MSPI_CLK_24MHZ
+#define MSPI_TEST_FREQ          AM_HAL_MSPI_CLK_16MHZ
 
 void            *g_FlashHdl;
 void            *g_MSPIHdl;

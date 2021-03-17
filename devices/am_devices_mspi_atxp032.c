@@ -698,6 +698,31 @@ am_devices_mspi_atxp032_init(uint32_t ui32Module, am_devices_mspi_atxp032_config
                 return AM_DEVICES_MSPI_ATXP032_STATUS_ERROR;
             }
             am_bsp_mspi_pins_enable(ui32Module, MSPI_ATXP032_Serial_CE0_MSPIConfig.eDeviceConfig);
+			{
+			
+			    am_hal_gpio_pincfg_t g_AM_ALT_83_MSPI0_CE0 =
+				{
+				    .GP.cfg_b.uFuncSel             = AM_HAL_PIN_83_NCE83,
+				    .GP.cfg_b.eGPInput             = AM_HAL_GPIO_PIN_INPUT_NONE,
+				    .GP.cfg_b.eGPRdZero            = AM_HAL_GPIO_PIN_RDZERO_READPIN,
+				    .GP.cfg_b.eIntDir              = AM_HAL_GPIO_PIN_INTDIR_LO2HI,
+				    .GP.cfg_b.eGPOutCfg            = AM_HAL_GPIO_PIN_OUTCFG_PUSHPULL,
+				    .GP.cfg_b.eDriveStrength       = AM_HAL_GPIO_PIN_DRIVESTRENGTH_0P5X,
+				    .GP.cfg_b.uSlewRate            = 0,
+				    .GP.cfg_b.ePullup              = AM_HAL_GPIO_PIN_PULLUP_NONE,
+				    .GP.cfg_b.uNCE                 = AM_HAL_GPIO_NCE_MSPI0CEN0,
+				    .GP.cfg_b.eCEpol               = AM_HAL_GPIO_PIN_CEPOL_ACTIVELOW,
+				    .GP.cfg_b.uRsvd_0              = 0,
+				    .GP.cfg_b.ePowerSw             = AM_HAL_GPIO_PIN_POWERSW_NONE,
+				    .GP.cfg_b.eForceInputEn        = AM_HAL_GPIO_PIN_FORCEEN_NONE,
+				    .GP.cfg_b.eForceOutputEn       = AM_HAL_GPIO_PIN_FORCEEN_NONE,
+				    .GP.cfg_b.uRsvd_1              = 0,
+				};
+
+				am_hal_gpio_state_write(73,AM_HAL_GPIO_OUTPUT_SET);
+				am_hal_gpio_pinconfig(73, am_hal_gpio_pincfg_output);
+				am_hal_gpio_pinconfig(83, g_AM_ALT_83_MSPI0_CE0);
+			}
             break;
         case AM_HAL_MSPI_FLASH_SERIAL_CE1:
         case AM_HAL_MSPI_FLASH_QUAD_CE1:
