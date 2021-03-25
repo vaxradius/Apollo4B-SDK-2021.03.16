@@ -3,9 +3,9 @@
 ; Scatter file for Keil linker configuration.
 ;
 ;******************************************************************************
-LR_1 0x00018000
+LR_1 0x00000000
 {
-    MCU_MRAM 0x00018000 0x001E8000
+    MCU_MRAM 0x00000000 0x001E8000
     {
         *.o (RESET, +First)
         * (+RO)
