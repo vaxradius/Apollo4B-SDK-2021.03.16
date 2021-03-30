@@ -396,7 +396,7 @@ main(void)
 	ui32Status = device_func.flash_read_id(g_FlashHdl);
 	if (AM_DEVICES_MSPI_FLASH_STATUS_SUCCESS != ui32Status)
     {
-        am_util_stdio_printf("Failed to read flash id(0x%08X)!\n",ui32Status);
+        am_util_stdio_printf("flash id(0x%08X)!\n",ui32Status);
 		//goto err;
     }
 	else
