@@ -700,9 +700,9 @@ am_devices_mspi_atxp032_init(uint32_t ui32Module, am_devices_mspi_atxp032_config
             am_bsp_mspi_pins_enable(ui32Module, MSPI_ATXP032_Serial_CE0_MSPIConfig.eDeviceConfig);
 			{
 			
-			    am_hal_gpio_pincfg_t g_AM_ALT_83_MSPI0_CE0 =
+			    am_hal_gpio_pincfg_t g_AM_ALT_69_MSPI0_CE0 =
 				{
-				    .GP.cfg_b.uFuncSel             = AM_HAL_PIN_83_NCE83,
+				    .GP.cfg_b.uFuncSel             = AM_HAL_PIN_69_NCE69,
 				    .GP.cfg_b.eGPInput             = AM_HAL_GPIO_PIN_INPUT_NONE,
 				    .GP.cfg_b.eGPRdZero            = AM_HAL_GPIO_PIN_RDZERO_READPIN,
 				    .GP.cfg_b.eIntDir              = AM_HAL_GPIO_PIN_INTDIR_LO2HI,
@@ -721,7 +721,7 @@ am_devices_mspi_atxp032_init(uint32_t ui32Module, am_devices_mspi_atxp032_config
 
 				am_hal_gpio_state_write(73,AM_HAL_GPIO_OUTPUT_SET);
 				am_hal_gpio_pinconfig(73, am_hal_gpio_pincfg_output);
-				am_hal_gpio_pinconfig(83, g_AM_ALT_83_MSPI0_CE0);
+				am_hal_gpio_pinconfig(69, g_AM_ALT_69_MSPI0_CE0);
 			}
             break;
         case AM_HAL_MSPI_FLASH_SERIAL_CE1:
