@@ -119,7 +119,7 @@ am_hal_clkgen_control(am_hal_clkgen_control_e eControl, void *pArgs)
             }
             else
             {
-                CLKGEN->HF2ADJ2_b.HF2ADJRATIO  = 0x200000;
+				CLKGEN->HF2ADJ2_b.HF2ADJRATIO  = *((uint32_t*)pArgs);
             }
             CLKGEN->HF2ADJ0_b.HF2ADJEN = 1;
             break;
